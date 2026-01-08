@@ -1,0 +1,50 @@
+*, ::before, ::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html, body, main, #widget {
+	width: 100%;
+	height: 100%;
+}
+
+#widget {
+	background: color-mix(in srgb, red, white);
+	border-radius: 20px;
+    font-family: Inter, system-ui;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px 1px 9px;
+
+    > .left {
+    	font-size: .92em;
+    	max-width: calc(100% - 78px);
+    	height: calc(100% - 8px - 9px);
+    	display: flex;
+    	align-items: center;
+	    white-space: nowrap;
+
+	    > p {
+	    	overflow: hidden;
+	    	text-overflow: ellipsis;
+	    }
+	}
+
+	> .right > i {
+		background: #fff3;
+		border: 1px solid #fff3;
+		border-radius: 8px;
+		padding: 3px;
+		backdrop-filter: blur(15px);
+		display: inline-grid;
+		place-items: center;
+		width: 23px;
+		height: 20px;
+		font-size: .8em;
+		padding-top: 1px;
+		box-shadow: inset 0 -5px 5px -2px #0002,
+					inset 0 5px  5px -2px #0002;
+	}
+}
