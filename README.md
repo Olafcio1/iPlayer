@@ -2,7 +2,7 @@
 Offline initutive music player.
 
 > **NOTE:** iPlayer is in BETA. It may be cool or useful, but it also may have big pain-in-the-ahh issues.
->           But I'm working on it. And it should be usable soon.
+>           But I'm working on it. And it should be fully usable soon.
 
 ## 💡 Comparison with other apps
 iPlayer is a music player-it doesn't display video and runs in the background.
@@ -10,12 +10,13 @@ Most media players don't focus on it; they rather simply play the content, don't
 
 Here's a table that compares some of the features:
 
-|          Feature          |   iPlayer  |       VLC      |      Spotify      |
-|---------------------------|------------|----------------|-------------------|
-| Picture-in-Picture widget | ✅        | ❌             | ✅                |
-| Background playing        | ✅        | 🟨 has issues  | ✅                |
-| Streaming                 | ❌        | ❌             | ✅                |
-| Downloading               | ❌ (soon) | ❌             | 🟦 (with premium) |
+|          Feature          |   iPlayer  |       VLC      |      Spotify      |      YT Music      |
+|---------------------------|------------|----------------|-------------------|--------------------|
+| Picture-in-Picture widget | ✅        | ❌             | ✅                | ❌                |
+| Background playing        | ✅        | 🟨 has issues  | ✅                | ✅                |
+| Streaming                 | ❌        | ❌             | ✅                | ✅                |
+| Downloading               | ❌ (soon) | ❌             | 🟦 (with premium) | 🟦 (with premium) |
+| Offline usage             | ✅        | ✅             | ✅                | ❌                |
 
 And here's some of the bugs/issues/pmo-s between them: (piss-me-offs)
 
