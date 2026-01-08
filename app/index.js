@@ -2,6 +2,13 @@ import { Collector } from "./scripts/collector.js";
 import { Player } from "./scripts/player.js";
 
 const timeout = ms => new Promise(rsv => setTimeout(rsv, ms));
+const nonPassive = { passive: false };
+
+addEventListener("dragstart", ev => ev.preventDefault(), nonPassive);
+addEventListener("keydown", ev => {
+	if (ev.ctrlKey && ev.code == "KeyP")
+		ev.preventDefault();
+}, nonPassive);
 
 (async () => {
 	while (window.pywebview?.api?.get_paths === undefined)
