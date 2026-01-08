@@ -20,10 +20,10 @@ Here's a table that compares some of the features:
 
 And here's some of the bugs/issues/pmo-s between them: (piss-me-offs)
 
-|         Issue         |          iPlayer         | VLC | Spotify |
-|-----------------------|--------------------------|-----|---------|
-| Lag / bad performance | 🟡 (on very low-end pcs) | ❌  | 🔴     |
-| Ads                   | ❌                       | ❌  | 🔴     |
+|         Issue         |          iPlayer         | VLC |        Spotify        |
+|-----------------------|--------------------------|-----|-----------------------|
+| Lag / bad performance | 🟡 (on very low-end pcs) | ❌  | 🔴                   |
+| Ads                   | ❌                       | ❌  | 🔴 (without premium) |
 
 Also, iPlayer doesn't have phone support; you probably wouldn't use it anyway.
 Some phones have built-in offline music players, e.g. Xiaomi - so it would also probably be unnecessary.
