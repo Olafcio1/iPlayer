@@ -17,15 +17,7 @@ export class Player {
 		this.audio.volume = .7;
 
 		songPP.addEventListener("click", () => {
-			if (this.active) {
-				this.audio.pause();
-				songPP.className = "facr fa-play";
-			} else {
-				this.audio.play();
-				songPP.className = "facr fa-pause";
-			}
-
-			this.active = !this.active;
+			this.togglePlaying();
 		});
 
 		addEventListener("keydown", ev => {
@@ -42,6 +34,18 @@ export class Player {
 		songNext.addEventListener("click", () => this.next(1));
 
 		this.setupEvents();
+	}
+
+	togglePlaying() {
+		if (this.active) {
+			this.audio.pause();
+			songPP.className = "facr fa-play";
+		} else {
+			this.audio.play();
+			songPP.className = "facr fa-pause";
+		}
+
+		this.active = !this.active;
 	}
 
 	setupEvents() {

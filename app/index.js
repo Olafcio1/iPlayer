@@ -10,12 +10,17 @@ addEventListener("keydown", ev => {
 		ev.preventDefault();
 }, nonPassive);
 
+window.iPlayer = {};
+
 (async () => {
 	while (window.pywebview?.api?.get_paths === undefined)
 		await timeout(50);
 
 	let collector = new Collector();
 	let player = new Player(collector.files);
+
+	iPlayer.collector = collector;
+	iPlayer.player = player;
 
 	collector.add_files();
 
