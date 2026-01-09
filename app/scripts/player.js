@@ -1,3 +1,5 @@
+import StringUtil from "./string-util.js";
+
 const songTitle = document.querySelector("#widget > .left > p");
 const [
 	songPrev,
@@ -72,17 +74,66 @@ export class Player {
 
 		this.active = true;
 
-		songTitle.innerText = song.substring(
-									song.lastIndexOf("/") + 1,
-									song.lastIndexOf(".")
-								  )
-								  .replaceAll("-", " ")
-								  .replaceAll("_", " ")
-							  .split(" ")
-							  .map(word => word.length
-							  				? word[0].toUpperCase() + word.substring(1)
-							  				: word)
-							  .join(" ");
+		songTitle.innerText = this.humanize(song);
 		songPP.className = "facr fa-pause";
+	}
+
+	humanize(song) {
+		// basename
+		song = song.substring(
+			   	song.lastIndexOf("/") + 1,
+				song.lastIndexOf(".")
+			   );
+
+		// fs copy mark removal
+		// TODO: Optimize to substring at the end
+		while (true)
+			if (song.endsWith(" - copy"))
+				song = song.substring(0, song.length - 7);
+			else if (song.endsWith(" - kopia"))
+				song = song.substring(0, song.length - 8);
+			else if (StringUtil.endsWithPattern({
+						"haystack": song,
+						"pattern": " (.)"
+					}))
+				song = song.substring(0, song.length - 4);
+			else break;
+
+		// downloader watermark removal
+		let prefix = "spotifydown.com";
+		if (StringUtil.startsWithSimilar({
+				"haystack": song,
+				"needle": prefix,
+				"rate": 13
+		}))
+			song = song.substring(prefix.length);
+
+		let suffix = "spotdown.app";
+		if (StringUtil.endsWithSimilar({
+				"haystack": song,
+				"needle": suffix,
+				"rate": 10
+		}))
+			song = song.substring(0, song.length - suffix.length);
+
+		// space management
+		song = song.replaceAll("-", " ")
+				   .replaceAll("_", " ");
+
+		// author name removal  (maybe soon in an additional textbox?)
+		if (song.includes("   "))
+			song = song.substring(song.indexOf("   ") + 1);
+
+		// trimming
+		song = StringUtil.trim(song, " -_");
+
+		// capitalization
+		song = song.split(" ")
+		    	   .map(word => word.length
+		  				? word[0].toUpperCase() + word.substring(1)
+		  				: word)
+		    	   .join(" ");
+
+ 	    return song;
 	}
 }
