@@ -13,6 +13,7 @@ os.chdir("/".join(__file__.replace("\\", "/").split("/")[:-1]))
 args = sys.argv[1:]
 nonEmpty = len(args) >= 1
 if nonEmpty:
+    exit = True
     if args[0] in ("/help", "--help", ":help", "help"):
         print("[-------- iPlayer CLI --------]")
         print("[help] Views this help page")
@@ -42,8 +43,11 @@ if nonEmpty:
             print("[space] Toggles the playback")
             print("[next] Plays the next track")
             print("[prev] Plays the previous track")
+    else:
+        exit = False
 
-    sys.exit(0)
+    if exit:
+        sys.exit(0)
 
 api = Api()
 win = webview.create_window(
