@@ -100,13 +100,14 @@ export class Player {
 			else break;
 
 		// downloader watermark removal
-		let prefix = "spotifydown.com";
-		if (StringUtil.startsWithSimilar({
-				"haystack": song,
-				"needle": prefix,
-				"rate": 13
-		}))
-			song = song.substring(prefix.length);
+		let prefixes = ["spotifydown.com", "[SPOTDOWNLOADER.COM]", "[SPOTIFY-DOWNLOADER.COM]"];
+		for (let prefix of prefixes)
+			if (StringUtil.startsWithSimilar({
+					"haystack": song,
+					"needle": prefix,
+					"rate": 13
+			}))
+				song = song.substring(prefix.length);
 
 		let suffix = "spotdown.app";
 		if (StringUtil.endsWithSimilar({
