@@ -14,7 +14,7 @@ window.iPlayer = {};
 
 (async () => {
 	while (window.pywebview?.api?.get_paths === undefined)
-		await timeout(50);
+		await timeout(150);
 
 	let collector = new Collector();
 	let player = new Player(collector.files);
