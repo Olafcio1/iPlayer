@@ -9,6 +9,11 @@ html, body, main, #widget {
 	height: 100%;
 }
 
+body {
+	touch-action: none;
+	user-select: none;
+}
+
 #widget {
 	background: color-mix(in srgb, red, white);
 	border-radius: 20px;
@@ -29,22 +34,34 @@ html, body, main, #widget {
 	    > p {
 	    	overflow: hidden;
 	    	text-overflow: ellipsis;
+	    	line-height: 1rem;
 	    }
 	}
 
-	> .right > i {
-		background: #fff3;
-		border: 1px solid #fff3;
-		border-radius: 8px;
-		padding: 3px;
-		backdrop-filter: blur(15px);
-		display: inline-grid;
-		place-items: center;
-		width: 23px;
-		height: 20px;
-		font-size: .8em;
-		padding-top: 1px;
-		box-shadow: inset 0 -5px 5px -2px #0002,
-					inset 0 5px  5px -2px #0002;
+	> .right {
+	    display: flex;
+	    gap: 4px;
+
+    	> i {
+			background: #fff3;
+			border: 1px solid #fff3;
+			border-radius: 8px;
+			padding: 3px;
+			backdrop-filter: blur(15px);
+			display: inline-grid;
+			place-items: center;
+			width: 23px;
+			height: 20px;
+			font-size: .8em;
+			padding-top: 1px!important;
+			box-shadow: inset -19px -16px 15px -8px #0002,
+						inset -3px 5px 55px -48px red;
+
+			&:focus-visible {
+				outline: 1px solid color-mix(in srgb, #ff8686, black 40%);
+				outline-offset: -1px;
+				background: #fff5;
+			}
+		}
 	}
 }

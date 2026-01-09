@@ -21,7 +21,7 @@ addEventListener("keydown", ev => {
 
 	while (true) {
 		if (player.files.length > 0) {
-			player.next();
+			player.next(0);
 			break;
 		}
 
