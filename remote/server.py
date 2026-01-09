@@ -33,10 +33,14 @@ class RemoteServer:
 							client.close()
 						except: pass
 						break
-					elif self.invoke_command(Command(command)):
-						client.send(d("v%d/ok" % VERSION))
 					else:
-						client.send(d("v%d/unr" % VERSION))
+						try:
+							if not self.invoke_command(Command(command)):
+								raise Exception()
+						except:
+							client.send(d("v%d/unr" % VERSION))
+						else:
+							client.send(d("v%d/ok" % VERSION))
 			except (ConnectionError, ConnectionAbortedError, ConnectionResetError):
 				print("🚦 client reset: %s" % ip)
 			except:
