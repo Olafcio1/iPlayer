@@ -1,6 +1,8 @@
 # ⏯ iPlayer
 Offline initutive music player.
 
+[ Perfect drop-in alternative for non-premium offline local Spotify playing! ]
+
 > **NOTE:** iPlayer is in BETA. It may be cool or useful, but it also may have big pain-in-the-ahh issues.
 >           But I'm working on it. And it should be fully usable soon.
 

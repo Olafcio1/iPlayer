@@ -1,9 +1,18 @@
 import webview
+import sys
 import os
 
 from api import Api
 
 os.chdir("/".join(__file__.replace("\\", "/").split("/")[:-1]))
+
+if "--help" in sys.argv:
+    print("[------- iPlayer CLI -------]")
+    print("[help] Views this help page")
+    print("[debug] Turns on the app with\n")
+    print("        developer tools")
+
+    sys.exit(0)
 
 api = Api()
 webview.create_window(
@@ -23,4 +32,4 @@ webview.create_window(
     on_top=True
 )
 
-webview.start(ssl=True, debug=True)
+webview.start(ssl=True, debug="--debug" in sys.argv)

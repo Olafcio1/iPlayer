@@ -68,7 +68,10 @@ export class Player {
 
 		this.active = true;
 
-		songTitle.innerText = song.substring(song.lastIndexOf("/") + 1)
+		songTitle.innerText = song.substring(
+									song.lastIndexOf("/") + 1,
+									song.lastIndexOf(".")
+								  )
 								  .replaceAll("-", " ")
 								  .replaceAll("_", " ")
 							  .split(" ")
