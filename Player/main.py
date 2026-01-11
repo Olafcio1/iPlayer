@@ -1,14 +1,18 @@
-import webview
 import sys
 import os
+
+path = "/".join(__file__.replace("\\", "/").split("/")[:-1])
+
+sys.path.append(path + "/..")
+os.chdir(path)
+
+import webview
 
 from api import Api
 
 from remote.protocol import Command
 from remote.server import RemoteServer
 from remote.client import RemoteClient
-
-os.chdir("/".join(__file__.replace("\\", "/").split("/")[:-1]))
 
 args = sys.argv[1:]
 nonEmpty = len(args) >= 1
