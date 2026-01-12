@@ -1,32 +1,38 @@
 import os
+import webview
+
+from remote.server import RemoteServer
+from remote.protocol import Notification
 
 from typing import ClassVar
 from threading import Thread, Lock
 
 class Api:
-    paths: list[str]
-    pthreads: list[Thread]
-    ptremove: list[Thread]
-    plock: Lock
+    _paths: list[str]
+    _pthreads: list[Thread]
+    _ptremove: list[Thread]
+    _plock: Lock
 
-    directories: ClassVar[list[str]] = [
+    _directories: ClassVar[list[str]] = [
         "$USERPROFILE/Downloads",
         "$USERPROFILE/Music",
         "$USERPROFILE/OneDrive/Downloads",
         "$USERPROFILE/OneDrive/Music"
     ]
 
+    _remote: RemoteServer
+
     def __init__(self) -> None:
-        self.paths = []
+        self._paths = []
 
-        self.pthreads = []
-        self.ptremove = []
+        self._pthreads = []
+        self._ptremove = []
 
-        self.plock = Lock()
+        self._plock = Lock()
         self._path_collection()
 
     def _path_collection(self) -> None:
-        for path in Api.directories:
+        for path in Api._directories:
             expanded = os.path.expandvars(path)
             if not os.path.exists(expanded):
                 continue
@@ -35,7 +41,7 @@ class Api:
                 expanded,
             ))).start()
 
-            self.pthreads.append(t)
+            self._pthreads.append(t)
 
     def _path_thread(self, path: str) -> None:
         files = os.listdir(path)
@@ -47,27 +53,33 @@ class Api:
                 # os.path.isfile check skipped; please
                 # don't create device files :sob:
 
-                with self.plock:
-                    self.paths.append(sub)
+                with self._plock:
+                    self._paths.append(sub)
 
     def _remove_all(self) -> None:
-        for thread in self.ptremove:
-            self.pthreads.remove(thread)
+        for thread in self._ptremove:
+            self._pthreads.remove(thread)
 
-        self.ptremove.clear()
+        self._ptremove.clear()
 
     def get_paths(self) -> list[Thread] | None:
-        if len(self.pthreads) > 0:
-            for thread in self.pthreads:
+        if len(self._pthreads) > 0:
+            for thread in self._pthreads:
                 if not thread.is_alive:
-                    self.ptremove.add(thread)
+                    self._ptremove.add(thread)
 
             self._remove_all()
 
-            with self.plock:
-                pcopy = self.paths.copy()
-                self.paths.clear()
+            with self._plock:
+                pcopy = self._paths.copy()
+                self._paths.clear()
 
             return pcopy
         else:
             return None
+
+    def paused(self) -> None:
+        self._remote.notify(Notification.PAUSE)
+
+    def played(self) -> None:
+        self._remote.notify(Notification.PLAY)

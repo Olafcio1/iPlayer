@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>iPlayer</title>
+		<link rel="stylesheet" href="./styles.css">
+		<style>
+			#widget {
+				border-radius: 0;
+			}
+		</style>
+		<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.1.0/css/fontawesome.css">
+		<link rel="stylesheet" href="https://site-assets.fontawesome.com/releases/v7.1.0/css/chisel-regular.css">
+	</head>
+	<body>
+		<main>
+			<div id="widget">
+				<div class="right">
+					<i id="prev-btn" class="facr fa-arrow-left" tabindex="0"></i>
+					<i id="play-btn" class="facr fa-play" tabindex="0"></i>
+					<i id="next-btn" class="facr fa-arrow-right" tabindex="0"></i>
+				</div>
+			</div>
+		</main>
+		<script>
+			let playing = true;
+			document.querySelector("#play-btn").addEventListener(() => {
+				pywebview.api.command(playing ? "pause" : "play");
+				playing = !playing;
+			});
+
+			document.querySelector("#prev-btn").addEventListener(() => {
+				pywebview.api.command("prev");
+			});
+
+			document.querySelector("#next-btn").addEventListener(() => {
+				pywebview.api.command("next");
+			});
+		</script>
+		<script src="./noevents.js" type="module" async defer></script>
+	</body>
+</html>

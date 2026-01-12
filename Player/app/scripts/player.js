@@ -1,11 +1,6 @@
 import StringUtil from "./string-util.js";
 
 const songTitle = document.querySelector("#widget > .left > p");
-const [
-	songPrev,
-	songPP,
-	songNext
-] = document.querySelectorAll("#widget > .right > i");
 
 export class Player {
 	audio = new Audio();
@@ -17,34 +12,16 @@ export class Player {
 	constructor(files) {
 		this.files = files;
 		this.audio.volume = .7;
-
-		songPP.addEventListener("click", () => {
-			this.togglePlaying();
-		});
-
-		addEventListener("keydown", ev => {
-			if (ev.key === "Enter") {
-				let el = [songPrev, songPP, songNext].find(el => el.matches(":focus-within"));
-				if (el) {
-					ev.preventDefault();
-					el.dispatchEvent(new Event("click"));
-				}
-			}
-		});
-
-		songPrev.addEventListener("click", () => this.next(-1));
-		songNext.addEventListener("click", () => this.next(1));
-
 		this.setupEvents();
 	}
 
 	togglePlaying() {
 		if (this.active) {
 			this.audio.pause();
-			songPP.className = "facr fa-play";
+			pywebview.api.paused();
 		} else {
 			this.audio.play();
-			songPP.className = "facr fa-pause";
+			pywebview.api.played();
 		}
 
 		this.active = !this.active;
@@ -52,12 +29,12 @@ export class Player {
 
 	setupEvents() {
 		this.audio.addEventListener("pause", () => {
-			songPP.className = "facr fa-play";
+			pywebview.api.paused();
 			this.active = false;
 		});
 
 		this.audio.addEventListener("play", () => {
-			songPP.className = "facr fa-pause";
+			pywebview.api.played();
 			this.active = true;
 		});
 
@@ -75,7 +52,6 @@ export class Player {
 		this.active = true;
 
 		songTitle.innerText = this.humanize(song);
-		songPP.className = "facr fa-pause";
 	}
 
 	humanize(song) {
@@ -101,6 +77,8 @@ export class Player {
 
 		// downloader watermark removal
 		let prefixes = ["spotifydown.com", "[SPOTDOWNLOADER.COM]", "[SPOTIFY-DOWNLOADER.COM]"];
+		prefixes.sort((a, b) => b.length - a.length);
+
 		for (let prefix of prefixes)
 			if (StringUtil.startsWithSimilar({
 					"haystack": song,

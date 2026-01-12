@@ -1,26 +1,21 @@
 import webview
-import socket
-from .protocol import Command, VERSION, b
+
+from socky.threadsafe import Connection
+from .protocol import Command, Notification, Close, VERSION
 
 class RemoteClient:
-	sock: socket.socket
+	sock: Connection
 
 	def __init__(self):
-		self.sock = socket.socket()
+		self.sock = Connection()
 
 	def connect(self) -> None:
-		self.sock.connect(("127.0.0.1", 44561))
-
-	def get_length(self) -> None:
-		lenraw = self.sock.recv(1)
-		length = int.from_bytes(lenraw, 'little')
-
-		return length
+		self.sock.connect("127.0.0.1", 44561)
 
 	def send(self, cmd: Command) -> None:
 		self.sock.send(cmd.value)
 
-		status = self.sock.recv(self.get_length())
+		status = self.sock.recv_msg(nonce)
 		probableCause = \
 			"protocol version mismatch" \
 			if not status.startswith(b("v%d/" % VERSION)) \
@@ -32,10 +27,13 @@ class RemoteClient:
 		elif status == b"bye":
 			raise RemoteClientError("unrecognized disconnection; " + probableCause)
 
-	def close(self) -> None:
-		self.sock.send(bytes([100]))
+	def read(self) -> Notification:
+		return self.sock.recv_msg(-1)
 
-		status = self.sock.recv(self.get_length())
+	def close(self) -> None:
+		self.sock.send(Close)
+
+		status = self.sock.recv()
 		probableCause = \
 			"protocol version mismatch" \
 			if not status.startswith(b("v%d/" % VERSION)) \

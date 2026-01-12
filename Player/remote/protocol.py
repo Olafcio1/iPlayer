@@ -7,9 +7,9 @@ class Command(Enum):
 	NEXT = b"\x03"
 	PREV = b"\x04"
 
-VERSION = 1
-b = lambda string: string.encode()
+class Notification(Enum):
+	PLAY = b"\x00"
+	PAUSE = b"\x01"
 
-def d(string):
-	raw = b(string)
-	return len(raw).to_bytes(1, 'little') + raw
+Close = b"\xff"
+VERSION = 2

@@ -1,17 +1,58 @@
 import webview
-import socket
-from .protocol import Command, VERSION, d
+
+from socky import Connection
+from socky.threadsafe import Connection as ThreadedConnection
+from socky.noncebased import Connection as NoncebasedConnection
+
+from threading import Thread
+from .protocol import Command, Notification, Close, VERSION
+
+class HandledClient:
+	sock: NoncebasedConnection
+	server: "RemoteServer"
+
+	def __init__(self, sock: ThreadedConnection, server: "RemoteServer"):
+		self.sock = NoncebasedConnection(sock)
+		self.server = server
+
+	def receiver(self) -> None:
+		while True:
+			command = self.sock.recv_msg()
+			if command == Close:
+				self.send("v%d/bye" % VERSION)
+				self.close()
+
+				break
+			else:
+				try:
+					self.server.invoke_command(Command(command))
+				except:
+					self.send("v%d/unr" % VERSION)
+				else:
+					self.send("v%d/ok" % VERSION)
+
+	def sender(self) -> None:
+		while self.sock.on:
+			self.messages.wait()
+
+			with self.messages.lock:
+				for msg in self.messages:
+					self.sock.send(msg)
 
 class RemoteServer:
-	sock: socket.socket
+	sock: Connection
 	win: webview.Window
+
+	_clients: list[HandledClient]
 
 	def __init__(self, win: webview.Window):
 		self.win = win
 
-		self.sock = socket.socket()
-		self.sock.bind(("", 44561))
+		self.sock = Connection(clientClass=NoncebasedConnection)
+		self.sock.bind("", 44561)
 		self.sock.listen(6)
+
+		self._clients = []
 
 	def serve(self) -> None:
 		while True:
@@ -25,22 +66,7 @@ class RemoteServer:
 				ip = addr[0]
 
 				print("🚦 client connect: %s" % ip)
-				while True:
-					command = client.recv(1)
-					if command == 100:
-						try:
-							client.send(d("v%d/bye" % VERSION))
-							client.close()
-						except: pass
-						break
-					else:
-						try:
-							if not self.invoke_command(Command(command)):
-								raise Exception()
-						except:
-							client.send(d("v%d/unr" % VERSION))
-						else:
-							client.send(d("v%d/ok" % VERSION))
+				Thread(target=self.handle, args=(client,)).start()
 			except (ConnectionError, ConnectionAbortedError, ConnectionResetError):
 				print("🚦 client reset: %s" % ip)
 			except:
@@ -48,7 +74,17 @@ class RemoteServer:
 			else:
 				print("🚦 client disconnect: %s" % ip)
 
-	def invoke_command(self, cmd: Command) -> bool:
+	def handle(self, client: Connection) -> None:
+		obj = HandledClient(client, self)
+		self._clients.append(obj)
+		Thread(target=obj.receiver).start()
+		obj.sender()
+
+	def notify(self, msg: Notification) -> None:
+		for cl in self._clients:
+			cl.send_msg(-1, msg.value[0])
+
+	def invoke_command(self, cmd: Command) -> None:
 		if cmd == Command.PAUSE:
 			self.win.evaluate_js("iPlayer.player.audio.pause()");
 		elif cmd == Command.PLAY:
@@ -60,6 +96,4 @@ class RemoteServer:
 		elif cmd == Command.PREV:
 			self.win.evaluate_js("iPlayer.player.next(-1)");
 		else:
-			return False
-
-		return True
+			raise ValueError("What the fuh is that?!")

@@ -71,7 +71,25 @@ win = webview.create_window(
     on_top=True
 )
 
-win.events.loaded += lambda: RemoteServer(win).serve()
+# def make_close_func(window):
+#     def func():
+#         nonlocal window
+
+#         window.confirm_close = False
+#         window.destroy()
+
+#     return func
+
+# btns.events.closed += make_close_func(win)
+# win.events.closed += make_close_func(btns)
+
+def loaded(*_):
+    global win, api
+    remote = RemoteServer(win)
+    api._remote = remote
+    remote.serve()
+
+win.events.loaded += loaded
 webview.start(ssl=True, debug=(
     nonEmpty and
     args[0] in ("/debug", "--debug", ":debug")
